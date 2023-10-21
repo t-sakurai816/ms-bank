@@ -8,7 +8,7 @@
 graph LR
   subgraph ms_bank[マイクロサービス銀行アプリ]
     phone(スマホ)
-      subgraph transfer_ms[Auth MS]
+      subgraph auth_ms[Auth MS]
         register(口座作成API)
         get_personal_info_api(個人情報API)
         db_personal[個人情報DB]
