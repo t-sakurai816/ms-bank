@@ -1,0 +1,38 @@
+---
+version: "3"
+services:
+  transfer:
+    build:
+      context: ./services/ms-bank-transfer
+      dockerfile: Dockerfile
+    image: ms_bank_transfer:1.0
+    ports:
+      - 3001:3001
+    depends_on:
+      - accounts
+  accounts:
+    build:
+      context: ./services/ms-bank-accounts
+      dockerfile: Dockerfile
+    image: ms_bank_accounts:1.0
+    ports:
+      - 3000:3000
+    environment:
+      MONGODB_URL: mongodb://accounts-db:27017/admin
+      MONGODB_ADMIN_NAME: root
+      MONGODB_ADMIN_PASS: example
+      WAIT_HOSTS: accounts-db:27017
+    depends_on:
+      - accounts-db
+  accounts-db:
+    image: mongo
+    volumes:
+      - accounts-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+volumes:
+  accounts-db:
+networks:
+  ms-bank-network:
+    driver: bridge
